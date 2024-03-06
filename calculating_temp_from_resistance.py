@@ -1,6 +1,7 @@
 # Chris 05.03.2024
 # calculate temperature from resistance data & the standard values given by the lab script
 
+
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
@@ -74,4 +75,18 @@ plt.show()
 
 
 # caluclating T_B from T_R
+T_correction_data = np.loadtxt('data\\T_R_to_T_B_correction.csv', delimiter=',')
+plt.plot(T_correction_data[:, 0], T_correction_data[:, 1], 'x', color='blue', label='standard values')
+plt.title('T_R to T_B correction')
+plt.xlabel('T_R Temperature [°K]')
+plt.ylabel('T_B Temperature [°K]')
+optimal_params, covariance = opt.curve_fit(linear_func, T_correction_data[:, 0], T_correction_data[:, 1])
+plt.plot(T_correction_data[:, 0], linear_func(T_correction_data[:, 0], *optimal_params), label='linear fit')
+plt.legend()
+plt.show()
+print('m:', optimal_params[0], 'c:', optimal_params[1])
+'''m: 0.9558987321709527 c: 127.60388173355331'''
 
+# calculating T_B from T_R
+def cal_temp_B_from_temp_R(temp_R):
+    return linear_func(temp_R, 0.9558987321709527, 127.60388173355331)
