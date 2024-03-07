@@ -5,6 +5,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
+# import scienceplots
+# plt.style.use('science')
 
 # import data
 given_data = np.loadtxt('data\\temp_resistance_relation_lab_script.csv', delimiter=',', skiprows=1)
@@ -69,7 +71,7 @@ print(uncert)
 plt.errorbar(measured_normalised_resistance, measured_temp_R, yerr=uncert, fmt='x', color='red', label='measured values')
 plt.xlabel('Resistance [Ohm]')
 plt.ylabel('Temperature [°K]')
-plt.title('Temperature - Resistance relation interpolated from standard values')
+plt.title('Temperature - Resistance relation\n interpolated from standard values')
 plt.grid()
 plt.legend()
 # plt.show()
@@ -87,6 +89,7 @@ optimal_params, covariance = opt.curve_fit(linear_func, T_correction_data[:, 0],
 plt.plot(T_correction_data[:, 0], linear_func(T_correction_data[:, 0], *optimal_params), label='linear fit')
 plt.legend()
 # plt.show()
+plt.grid()
 plt.savefig('graphs\\T_R_to_T_B_correction.png')
 plt.close()
 print('m:', optimal_params[0], 'c:', optimal_params[1])
