@@ -35,7 +35,9 @@ plt.ylabel('Temperature [°K]')
 plt.title('given Temperature - Resistance relation')
 plt.grid()
 plt.legend()
-plt.show()
+# plt.show()
+plt.savefig('graphs\\temp_resistance_relation_lab_script.png')
+plt.close()
 
 
 # function to calculate temperature from resistance (T_R)
@@ -70,8 +72,9 @@ plt.ylabel('Temperature [°K]')
 plt.title('Temperature - Resistance relation interpolated from standard values')
 plt.grid()
 plt.legend()
-plt.show()
-
+# plt.show()
+plt.savefig('graphs\\temp_resistance_relation_interpolated.png')
+plt.close()
 
 
 # caluclating T_B from T_R
@@ -83,10 +86,26 @@ plt.ylabel('T_B Temperature [°K]')
 optimal_params, covariance = opt.curve_fit(linear_func, T_correction_data[:, 0], T_correction_data[:, 1])
 plt.plot(T_correction_data[:, 0], linear_func(T_correction_data[:, 0], *optimal_params), label='linear fit')
 plt.legend()
-plt.show()
+# plt.show()
+plt.savefig('graphs\\T_R_to_T_B_correction.png')
+plt.close()
 print('m:', optimal_params[0], 'c:', optimal_params[1])
 '''m: 0.9558987321709527 c: 127.60388173355331'''
 
 # calculating T_B from T_R
 def cal_temp_B_from_temp_R(temp_R):
     return linear_func(temp_R, 0.9558987321709527, 127.60388173355331)
+
+
+
+# plotting temperatures against current  
+plt.plot(taken_data[:, 4], measured_temp_R, 'x', color='blue', label='T_R')
+plt.plot(taken_data[:, 4], cal_temp_B_from_temp_R(measured_temp_R), 'x', color='red', label='T_B')
+plt.xlabel('Current [A]')
+plt.ylabel('Temperature [°K]')
+plt.title('Temperature - Current relation')
+plt.grid()
+plt.legend()
+# plt.show()
+plt.savefig('graphs\\temp_current_relation.png')
+plt.close()
