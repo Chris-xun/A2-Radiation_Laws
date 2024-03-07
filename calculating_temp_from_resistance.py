@@ -112,3 +112,6 @@ plt.legend()
 # plt.show()
 plt.savefig('graphs\\temp_current_relation.png')
 plt.close()
+
+
+#will was here
