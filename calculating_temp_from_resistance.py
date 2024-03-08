@@ -5,6 +5,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
+from scipy.interpolate import CubicSpline
 # import scienceplots
 # plt.style.use('science')
 
@@ -102,6 +103,9 @@ def cal_temp_B_from_temp_R(temp_R):
 
 
 # plotting temperatures against current  
+print(taken_data[:, 4])
+cs = CubicSpline(taken_data[:, 4], cal_temp_B_from_temp_R(measured_temp_R))
+plt.plot(taken_data[:, 4], cs(taken_data[:, 4]), label='cubic spline fit')
 plt.plot(taken_data[:, 4], measured_temp_R, 'x', color='blue', label='T_R')
 plt.plot(taken_data[:, 4], cal_temp_B_from_temp_R(measured_temp_R), 'x', color='red', label='T_B')
 plt.xlabel('Current [A]')
@@ -112,6 +116,7 @@ plt.legend()
 # plt.show()
 plt.savefig('graphs\\temp_current_relation.png')
 plt.close()
+
 
 
 #will was here
