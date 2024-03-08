@@ -37,9 +37,9 @@ def round_to_significant_figure(x, n):
 # importing the data
 data = np.loadtxt('data\\photodetector_data.csv', delimiter=',', skiprows=1)
 
-data_index = [4, 6, 7, 8]
-uncert_index = [5, 5, 5, 9]
-for i in range(4):
+data_index = [4, 6, 7, 8, 10]
+uncert_index = [5, 5, 5, 9, 9]
+for i in range(5):
     lambda1 = lambdas[i]
     lamp_current = data[:, 0]
     lamp_current_uncert = data[:, 1]
@@ -80,4 +80,5 @@ for i in range(4):
     plt.ylabel('ln(Signal)')
 plt.grid()
 plt.legend()
+plt.savefig('graphs\\planck_constant_from_filter_data.png')
 plt.show()
