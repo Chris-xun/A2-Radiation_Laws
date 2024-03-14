@@ -45,7 +45,7 @@ for i in range(len(data_index)):
     lamp_current_uncert = np.array([0.0001 for i in range(len(lamp_current))])  #    data[:, 1]   ################ need to measure this ################
     filter1 = data[:, data_index[i]] * 1e3
     filter_uncert = data[:, uncert_index[i]] #* 1e3
-    # plt.plot(np.log(np.array(filter1)))
+    # plt.plot(lamp_current, np.array(filter1), 'x')
     # plt.show()
 
 
@@ -54,7 +54,7 @@ for i in range(len(data_index)):
     y = f.cal_temp_B_from_temp_R(f.cal_temp_from_normalised_resistance(taken_data[:, -1]))
     x = taken_data[:, 4]
     plt.plot(x,y)
-    plt.savefig('graphs\cubic_spline.png')
+    plt.savefig('graphs\cubic_spline_current_to_TB.png')
     plt.close()
     cs = CubicSpline(x,y)
 
@@ -70,6 +70,10 @@ for i in range(len(data_index)):
     filter1 = np.log(filter1)
     filter_uncert = filter_uncert/filter1
     temperture = cs(reduced_lamp_current)
+    # plt.close()
+    # plt.title('1/temmp thingy')
+    # plt.plot(1/temperture)
+    # plt.show()
     x_values = 1 / temperture
     x_values_uncert = 1 / temperture**2 * reduced_lamp_current_uncert
     optimal_params, cov_matrix = opt.curve_fit(linear, x_values, filter1, sigma=filter_uncert)
