@@ -80,5 +80,5 @@ for i in range(5):
     plt.ylabel('ln(Signal)')
 plt.grid()
 plt.legend()
-plt.savefig('graphs\\planck_constant_from_filter_data.png')
+plt.savefig('graphs\\planck_constant_from_current_filter_data.png')
 plt.show()
