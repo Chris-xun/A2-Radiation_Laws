@@ -44,7 +44,7 @@ for i in range(len(data_index)):
     lamp_current = data[:, 0]
     lamp_current_uncert = np.array([0.0001 for i in range(len(lamp_current))])  #    data[:, 1]   ################ need to measure this ################
     filter1 = data[:, data_index[i]] * 1e3
-    filter_uncert = data[:, uncert_index[i]] * 1e3
+    filter_uncert = data[:, uncert_index[i]] #* 1e3
 
 
     # cupic spline interpolation to get the T_B from the current measured
@@ -80,5 +80,5 @@ for i in range(len(data_index)):
     plt.ylabel('ln(Signal)')
 plt.grid()
 plt.legend()
-plt.savefig('graphs\\planck_constant_from_filter_data.png')
+plt.savefig('graphs\\planck_constant_from_voltage_filter_data.png')
 plt.show()
