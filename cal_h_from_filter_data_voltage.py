@@ -37,14 +37,14 @@ def round_to_significant_figure(x, n):
 # importing the data
 data = np.loadtxt('data\\gain_photodetector.csv', delimiter=',', skiprows=1)
 
-data_index = [2,3,4]
-uncert_index = [1,1,1]
+data_index = [2]
+uncert_index = [1]
 for i in range(len(data_index)):
     lambda1 = lambdas[i]
     lamp_current = data[:, 0]
     lamp_current_uncert = np.array([0.0001 for i in range(len(lamp_current))])  #    data[:, 1]   ################ need to measure this ################
     filter1 = data[:, data_index[i]] * 1e3
-    filter_uncert = data[:, uncert_index[i]] * 1e3
+    filter_uncert = data[:, uncert_index[i]] # * 1e3
 
 
     # cupic spline interpolation to get the T_B from the current measured
