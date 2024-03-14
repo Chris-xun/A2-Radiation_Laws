@@ -45,11 +45,18 @@ for i in range(len(data_index)):
     lamp_current_uncert = np.array([0.0001 for i in range(len(lamp_current))])  #    data[:, 1]   ################ need to measure this ################
     filter1 = data[:, data_index[i]] * 1e3
     filter_uncert = data[:, uncert_index[i]] #* 1e3
+    # plt.plot(np.log(np.array(filter1)))
+    # plt.show()
 
 
     # cupic spline interpolation to get the T_B from the current measured
     taken_data = np.loadtxt('data\\resistance_to_temp.csv', delimiter=',', skiprows=1) 
-    cs = CubicSpline(taken_data[:, 4], f.cal_temp_B_from_temp_R(f.cal_temp_from_normalised_resistance(taken_data[:, -1])))
+    y = f.cal_temp_B_from_temp_R(f.cal_temp_from_normalised_resistance(taken_data[:, -1]))
+    x = taken_data[:, 4]
+    plt.plot(x,y)
+    plt.savefig('graphs\cubic_spline.png')
+    plt.close()
+    cs = CubicSpline(x,y)
 
 
     # removing the 0 values from the data
