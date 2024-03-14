@@ -4,6 +4,7 @@
 # importing 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 import scipy.optimize as opt
 import functions as f
 from scipy.interpolate import CubicSpline
@@ -35,7 +36,7 @@ def reduce_by_first_nonzero(arr):
         # If there are no non-zero values, return the original array
         return arr
     
-    first_non_zero = non_zero_values[0]
+    first_non_zero = non_zero_values[0] + 1e-10
     
     # Subtract the first non-zero value from every element
     reduced_arr = arr - first_non_zero
@@ -46,12 +47,21 @@ def reduce_by_first_nonzero(arr):
 # importing the data
 data = np.loadtxt('data\\gain_photodetector.csv', delimiter=',', skiprows=1)
 
+# Create a ScalarFormatter object
+formatter = ScalarFormatter(useMathText=True)  # useMathText=True to use math text for scientific notation
+formatter.set_scientific(True)  # Enable scientific notation
+formatter.set_powerlimits((-1,1))  # You can adjust these limits based on your data
+
+# Apply the formatter to the y-axis
+plt.gca().xaxis.set_major_formatter(formatter)
+
 data_index = [2, 3, 4, 5, 6]
 uncert_index = [1, 1, 1, 1, 1]
+colors = ['red', 'blue', 'green', 'orange', 'purple']
 for i in range(len(data_index)):
     lambda1 = lambdas[i]
     lamp_current = data[:, 0]
-    lamp_current_uncert = np.array([0.0001 for _ in range(len(lamp_current))])  #    data[:, 1]   ################ need to measure this ################
+    lamp_current_uncert = np.array([0.0005 for _ in range(len(lamp_current))]) # this is the actual uncert
     filter1 = data[:, data_index[i]] * 1e3
     filter1 = reduce_by_first_nonzero(filter1)
     filter_uncert = data[:, uncert_index[i]] * 1e3
@@ -77,7 +87,7 @@ for i in range(len(data_index)):
     reduced_lamp_current_uncert = lamp_current_uncert[mask]
 
     # calculating
-    print(filter1)
+    # print(filter1)
     signal = np.log(filter1)
     filter_uncert = filter_uncert/filter1
     temperture = cs(reduced_lamp_current)
@@ -94,15 +104,15 @@ for i in range(len(data_index)):
 
     # plotting the data
     plt.title('Planck constant from filter data\n Ln(Signal) vs 1/T')
-    plt.plot(x_values, signal,'x', label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,3)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,1)) + ')$\\times 10^{-34}$')
-    # plt.errorbar(x_values, filter1, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,3)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,1)) + ')$\\times 10^{-34}$')
-    # plt.errorbar(x_values, filter1, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label="(1/T) for filter: {:.3f}, h = {:.3f} $\pm$ {:.1f} ".format(lambda1, h_measured, h_measured_uncert))
+    # plt.plot(x_values, signal,'x', label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,3)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,1)) + ')$\\times 10^{-34}$')
+    plt.errorbar(x_values, signal, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', color=colors[i], label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,1)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,0)) + ')$\\times 10^{-34}$')
+    # plt.errorbar(x_values, signal, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label="(1/T) for filter: {:.3f}, h = {:.3f} $\pm$ {:.1f} ".format(lambda1, h_measured, h_measured_uncert))
 
-    plt.plot(x_values, f.linear_func(x_values,*optimal_params)) #, label='y = {:.2f}x + {:.2f}'.format(optimal_params[0], optimal_params[1]))
-    plt.xlabel('Inverse Temperature (1/T) (K^-1)')
+    plt.plot(x_values, f.linear_func(x_values,*optimal_params), color=colors[i]) #, label='y = {:.2f}x + {:.2f}'.format(optimal_params[0], optimal_params[1]))
+    plt.xlabel('Inverse Temperature (1/T) ($K^{-1}$)')
     plt.ylabel('ln(Signal)')
     
 plt.grid()
-plt.legend()
+plt.legend(loc=1)
 plt.savefig('graphs\\planck_constant_from_voltage_filter_data.png')
 plt.show()
