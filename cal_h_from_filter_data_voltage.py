@@ -9,7 +9,7 @@ import scipy.optimize as opt
 import functions as f
 from scipy.interpolate import CubicSpline
 
-lambdas = [598.91e-9, 550e-9, 490e-9, 450e-9, 400e-9]
+lambdas = [598.91e-9, 551e-9, 500.6e-9, 456.5e-9, 398.4e-9]
 c = 2.99792e8
 h = 6.626e-34
 k_b = 1.380649e-23
