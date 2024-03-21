@@ -45,8 +45,8 @@ def reduce_by_first_nonzero(arr):
     return reduced_arr
 
 
-# importing the data    # 'data\\gain_photodetector.csv' or 'data\\filter_measure\\filter_1_mid_coil.csv'
-data = np.loadtxt('data\\filter_measure\\filter_1_mid_coil.csv', delimiter=',', skiprows=1)
+# importing the data    # 'data\\gain_photodetector.csv' or 'data\\filter_measure\\all.csv'
+data = np.loadtxt('data\\filter_measure\\all.csv', delimiter=',', skiprows=1)
 
 # Create a ScalarFormatter object
 formatter = ScalarFormatter(useMathText=True)  # useMathText=True to use math text for scientific notation
@@ -56,10 +56,8 @@ formatter.set_powerlimits((-1,1))  # You can adjust these limits based on your d
 # Apply the formatter to the y-axis
 plt.gca().xaxis.set_major_formatter(formatter)
 
-# data_index = [2,3,4,5,6]
-# uncert_index = [1,1,1,1,1]
-data_index = [1]
-uncert_index = [2]
+data_index = [2,3,4,5,6]
+uncert_index = [1,1,1,1,1]
 colors = ['red', 'blue', 'green', 'orange', 'purple']
 for i in range(len(data_index)):
     lambda1 = lambdas[i]
@@ -130,5 +128,5 @@ for i in range(len(data_index)):
     
 plt.grid()
 plt.legend(loc=1)
-plt.savefig('graphs\\planck_constant_from_voltage_filter_data.png')
+plt.savefig('graphs\\planck_constant_from_voltage_filter_data_calculated_temp_current_relation.png')
 plt.show()
