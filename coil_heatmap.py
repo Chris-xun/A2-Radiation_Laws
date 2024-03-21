@@ -11,7 +11,7 @@ def interpolate_heatmap(data, x_dist, y_dist):
     y = np.arange(0, n * y_dist, y_dist)
     
     # Create interpolating function
-    f = interp2d(x, y, data, kind='cubic')
+    f = interp2d(x, y, data, kind="cubic")
     
     # Generate finer grid for smoother heatmap
     x_new = np.arange(0, (m - 1) * x_dist, 0.1)
