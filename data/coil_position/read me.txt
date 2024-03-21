@@ -1,0 +1,4 @@
+15mm x 35mm coil
+5mm increments along horizontal and vertical
+0 = bottom
+5 = 25mm (top 10mm were not measured)
