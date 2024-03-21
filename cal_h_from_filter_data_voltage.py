@@ -45,8 +45,8 @@ def reduce_by_first_nonzero(arr):
     return reduced_arr
 
 
-# importing the data    # 'data\\gain_photodetector.csv'
-data = np.loadtxt('data\\gain_photodetector.csv', delimiter=',', skiprows=1)
+# importing the data    # 'data\\gain_photodetector.csv' or 'data\\filter_measure\\filter_1_mid_coil.csv'
+data = np.loadtxt('data\\filter_measure\\filter_1_mid_coil.csv', delimiter=',', skiprows=1)
 
 # Create a ScalarFormatter object
 formatter = ScalarFormatter(useMathText=True)  # useMathText=True to use math text for scientific notation
@@ -56,8 +56,10 @@ formatter.set_powerlimits((-1,1))  # You can adjust these limits based on your d
 # Apply the formatter to the y-axis
 plt.gca().xaxis.set_major_formatter(formatter)
 
-data_index = [2,3,4,5,6]
-uncert_index = [1,1,1,1,1]
+# data_index = [2,3,4,5,6]
+# uncert_index = [1,1,1,1,1]
+data_index = [1]
+uncert_index = [2]
 colors = ['red', 'blue', 'green', 'orange', 'purple']
 for i in range(len(data_index)):
     lambda1 = lambdas[i]
@@ -90,7 +92,7 @@ for i in range(len(data_index)):
     y = arrays[1]
     cs_bb_spectrum = CubicSpline(x, y)
 
-    cs = cs
+    cs = cs_bb_spectrum
 
 
     # removing the 0 values from the data
