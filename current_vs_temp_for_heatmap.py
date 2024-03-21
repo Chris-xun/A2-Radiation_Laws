@@ -40,7 +40,7 @@ folder = 'data\\coil_position\\coil_position_data'
 files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
 
 # storing the temp data
-temp = np.zeros((3,6))
+temp = np.zeros((6, 3))
 for file in files:
     # importing the data
     data = load_file_custom(os.path.join(folder, file))
@@ -71,8 +71,8 @@ for file in files:
         i = 2
     j = int(file[1])
     
-    temp[i,j] = optimal_params[0]
-
+    temp[j, i] = optimal_params[0]
+print(temp)
 
 # plotting the data in a heat map
 h.interpolate_heatmap(temp, 1, 1)

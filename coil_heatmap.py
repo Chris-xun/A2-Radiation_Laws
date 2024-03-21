@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import interp2d
 
 def interpolate_heatmap(data, x_dist, y_dist):
+    # padding the data with zeros
+    data = np.pad(data, ((1, 1), (1, 1)), mode='constant')
+    
     # Get dimensions of the input data
     n, m = data.shape
     
@@ -27,6 +30,7 @@ def interpolate_heatmap(data, x_dist, y_dist):
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.title('Coil Emmisivity')
+    plt.savefig('coil_emmisivity.png')
     plt.show()
 
 
@@ -51,10 +55,8 @@ def example():
                     [0.3, 0.6, 0.2],
                     [0.3, 0.7, 0.3],
                     [0.2, 0.5, 0.3],
-                    [0.1, 0.4, 0.2]])
-    data_with_ghost = np.pad(data, ((1, 1), (1, 1)), mode='constant')                                  
-
+                    [0.1, 0.4, 0.2]])                              
 
     # Interpolate and plot heatmap
-    interpolate_heatmap(data_with_ghost, x_distance, y_distance)
+    interpolate_heatmap(data, x_distance, y_distance)
 
