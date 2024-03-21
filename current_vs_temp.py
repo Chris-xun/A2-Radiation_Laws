@@ -41,6 +41,7 @@ colors = ['red', 'blue', 'green', 'orange', 'purple', 'black', 'pink', 'yellow',
 # current_numbers = [0.4]
 # colors = ['red']
 
+temp = []
 # plotting all the files onto 1 graph for comparison
 for current, color in zip(current_numbers, colors):
     # importing the data
@@ -53,12 +54,19 @@ for current, color in zip(current_numbers, colors):
     data_slicing_posiion = len(x) // 5 * 3
     optimal_params, cov_matrix = opt.curve_fit(blackbody_radiation, x[:data_slicing_posiion], y[:data_slicing_posiion], p0=[1000, 0.5])
     print(optimal_params[0])
+    temp = np.append(temp, optimal_params[0])
     # print(blackbody_radiation(x, optimal_params[0]))
     fit_y = blackbody_radiation(x, *optimal_params) #/ np.max(blackbody_radiation(x, *optimal_params))
-    plt.plot(x, y, label=str(current)+'A', color=color)
-    plt.plot(x, fit_y, color=color, linestyle='--')
+    plt.plot(x, y, label=str(current)+'A', color=color, alpha = 0.5)
+    plt.plot(x, fit_y, color=color)
 
 plt.xlabel('Wavelength')
 plt.ylabel('Intensity')
+plt.ylim(0, 1e7)
 plt.legend()
+plt.show()
+
+plt.plot(current_numbers, temp)
+plt.xlabel('Current (A)')
+plt.ylabel('Temperature (K)')
 plt.show()
