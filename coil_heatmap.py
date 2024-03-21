@@ -41,19 +41,20 @@ def interpolate_heatmap(data, x_dist, y_dist):
 
 
 # possible example data
-N = 3
-M = 6
-x_distance = 5
-y_distance = 5
-data = np.array([[0.2, 0.5, 0.2],
-                 [0.2, 0.5, 0.3],
-                 [0.3, 0.6, 0.2],
-                 [0.3, 0.7, 0.3],
-                 [0.2, 0.5, 0.3],
-                 [0.1, 0.4, 0.2]])
-data_with_ghost = np.pad(data, ((1, 1), (1, 1)), mode='constant')                                  
+def example():
+    N = 3
+    M = 6
+    x_distance = 5
+    y_distance = 5
+    data = np.array([[0.2, 0.5, 0.2],
+                    [0.2, 0.5, 0.3],
+                    [0.3, 0.6, 0.2],
+                    [0.3, 0.7, 0.3],
+                    [0.2, 0.5, 0.3],
+                    [0.1, 0.4, 0.2]])
+    data_with_ghost = np.pad(data, ((1, 1), (1, 1)), mode='constant')                                  
 
 
-# Interpolate and plot heatmap
-interpolate_heatmap(data_with_ghost, x_distance, y_distance)
+    # Interpolate and plot heatmap
+    interpolate_heatmap(data_with_ghost, x_distance, y_distance)
 
