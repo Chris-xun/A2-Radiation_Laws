@@ -52,6 +52,7 @@ for current, color in zip(current_numbers, colors):
     y = data[:, 1] / np.trapz(data[:,1], x)
 
     data_slicing_posiion = len(x) // 5 * 3
+    # data_slicing_posiion = (np.where(y>0.3e7)[0][0] + np.where(y>0.3e7)[0][-1]) // 2
     optimal_params, cov_matrix = opt.curve_fit(blackbody_radiation, x[:data_slicing_posiion], y[:data_slicing_posiion], p0=[1000, 0.5])
     print(optimal_params[0])
     temp = np.append(temp, optimal_params[0])
@@ -60,13 +61,18 @@ for current, color in zip(current_numbers, colors):
     plt.plot(x, y, label=str(current)+'A', color=color, alpha = 0.5)
     plt.plot(x, fit_y, color=color)
 
-plt.xlabel('Wavelength')
-plt.ylabel('Intensity')
-plt.ylim(0, 1e7)
-plt.legend()
-plt.show()
+# plt.xlabel('Wavelength')
+# plt.ylabel('Intensity')
+# plt.ylim(0, 1e7)
+# plt.legend()
+# # plt.savefig('current_vs_temp.png')
+# plt.show()
+plt.close()
 
-plt.plot(current_numbers, temp)
+plt.plot(current_numbers, temp, 'x')
 plt.xlabel('Current (A)')
 plt.ylabel('Temperature (K)')
 plt.show()
+
+print(list(temp))
+'''[1704.761995108607, 1816.6648674944515, 1915.7752515040233, 1997.35917421358, 2066.1052219558246, 2143.344283321691, 2204.6546532873253, 2262.103447937235, 2318.276476094833, 2413.0920857482847]'''
