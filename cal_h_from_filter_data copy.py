@@ -4,6 +4,7 @@
 # importing 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 import scipy.optimize as opt
 import functions as f
 from scipy.interpolate import CubicSpline
@@ -36,6 +37,14 @@ def round_to_significant_figure(x, n):
 
 # importing the data
 data = np.loadtxt('data\\photodetector_data.csv', delimiter=',', skiprows=1)
+
+# Create a ScalarFormatter object
+formatter = ScalarFormatter(useMathText=True)  # useMathText=True to use math text for scientific notation
+formatter.set_scientific(True)  # Enable scientific notation
+formatter.set_powerlimits((-1,1))  # You can adjust these limits based on your data
+
+# Apply the formatter to the y-axis
+plt.gca().xaxis.set_major_formatter(formatter)
 
 data_index = [4, 6, 7, 8, 10]
 uncert_index = [5, 5, 5, 9, 9]
@@ -76,7 +85,7 @@ for i in range(5):
     # plt.errorbar(x_values, filter1, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label="(1/T) for filter: {:.3f}, h = {:.3f} $\pm$ {:.1f} ".format(lambda1, h_measured, h_measured_uncert))
 
     plt.plot(x_values, linear(x_values,*optimal_params)) #, label='y = {:.2f}x + {:.2f}'.format(optimal_params[0], optimal_params[1]))
-    plt.xlabel('Lamp Current (A)')
+    plt.xlabel('Inverse Temperature (1/T) ($K^{-1}$)')
     plt.ylabel('ln(Signal)')
 plt.grid()
 plt.legend()

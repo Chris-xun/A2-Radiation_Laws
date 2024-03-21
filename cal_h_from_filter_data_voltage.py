@@ -4,23 +4,15 @@
 # importing 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import ScalarFormatter
 import scipy.optimize as opt
 import functions as f
 from scipy.interpolate import CubicSpline
 
-lambdas = [598.91e-9, 550e-9, 490e-9, 450e-9, 400e-9]
+lambdas = [598.91e-9, 551e-9, 500.6e-9, 456.5e-9, 398.4e-9]
 c = 2.99792e8
 h = 6.626e-34
 k_b = 1.380649e-23
-
-def linear(x, a, b):
-    result = np.zeros(len(x))
-    for i in range(len(x)):
-        if x[i] == 0:
-            result[i] = np.nan
-        else:
-            result[i] = a*x[i] + b
-    return a*x + b
 
 def round_to_significant_figure(x, n):
     if x == 0:
@@ -34,17 +26,45 @@ def round_to_significant_figure(x, n):
         rounded_number = rounded_number / 10**(n-order_of_magnitude)
         return rounded_number
 
+def reduce_by_first_nonzero(arr):
+    # Convert to a numpy array if not already
+    arr = np.array(arr)
+    
+    # Find the first non-zero value
+    non_zero_values = arr[arr != 0]
+    if len(non_zero_values) == 0:
+        # If there are no non-zero values, return the original array
+        return arr
+    
+    first_non_zero = non_zero_values[0] + 1e-10
+    
+    # Subtract the first non-zero value from every element
+    reduced_arr = arr - first_non_zero
+    
+    return reduced_arr
+
+
 # importing the data
 data = np.loadtxt('data\\gain_photodetector.csv', delimiter=',', skiprows=1)
 
-data_index = [2]
-uncert_index = [1]
+# Create a ScalarFormatter object
+formatter = ScalarFormatter(useMathText=True)  # useMathText=True to use math text for scientific notation
+formatter.set_scientific(True)  # Enable scientific notation
+formatter.set_powerlimits((-1,1))  # You can adjust these limits based on your data
+
+# Apply the formatter to the y-axis
+plt.gca().xaxis.set_major_formatter(formatter)
+
+data_index = [2, 3, 4, 5, 6]
+uncert_index = [1, 1, 1, 1, 1]
+colors = ['red', 'blue', 'green', 'orange', 'purple']
 for i in range(len(data_index)):
     lambda1 = lambdas[i]
     lamp_current = data[:, 0]
-    lamp_current_uncert = np.array([0.0001 for i in range(len(lamp_current))])  #    data[:, 1]   ################ need to measure this ################
+    lamp_current_uncert = np.array([0.0005 for _ in range(len(lamp_current))]) # this is the actual uncert
     filter1 = data[:, data_index[i]] * 1e3
-    filter_uncert = data[:, uncert_index[i]] #* 1e3
+    filter1 = reduce_by_first_nonzero(filter1)
+    filter_uncert = data[:, uncert_index[i]] * 1e3
     # plt.plot(lamp_current, np.array(filter1), 'x')
     # plt.show()
 
@@ -53,21 +73,22 @@ for i in range(len(data_index)):
     taken_data = np.loadtxt('data\\resistance_to_temp.csv', delimiter=',', skiprows=1) 
     y = f.cal_temp_B_from_temp_R(f.cal_temp_from_normalised_resistance(taken_data[:, -1]))
     x = taken_data[:, 4]
-    plt.plot(x,y)
-    plt.savefig('graphs\cubic_spline_current_to_TB.png')
-    plt.close()
+    # plt.plot(x,y)
+    # plt.savefig('graphs\cubic_spline_current_to_TB.png')
+    # plt.close()
     cs = CubicSpline(x,y)
 
 
     # removing the 0 values from the data
-    mask = filter1 != 0
+    mask = filter1 > 0
     filter1 = filter1[mask]
     filter_uncert = filter_uncert[mask]
     reduced_lamp_current = lamp_current[mask]
     reduced_lamp_current_uncert = lamp_current_uncert[mask]
 
     # calculating
-    filter1 = np.log(filter1)
+    # print(filter1)
+    signal = np.log(filter1)
     filter_uncert = filter_uncert/filter1
     temperture = cs(reduced_lamp_current)
     # plt.close()
@@ -76,20 +97,22 @@ for i in range(len(data_index)):
     # plt.show()
     x_values = 1 / temperture
     x_values_uncert = 1 / temperture**2 * reduced_lamp_current_uncert
-    optimal_params, cov_matrix = opt.curve_fit(linear, x_values, filter1, sigma=filter_uncert)
+    optimal_params, cov_matrix = opt.curve_fit(f.linear_func, x_values, signal, sigma=x_values_uncert)
     h_measured = -1 * k_b * optimal_params[0] * lambda1 / c
     h_measured_uncert = 1 * k_b * np.sqrt(cov_matrix[0,0]) * lambda1 / c
     print('\nfor filter: ', lambda1,'h measured:', h_measured, 'fractional error:' , abs(h - h_measured) / h )
 
     # plotting the data
     plt.title('Planck constant from filter data\n Ln(Signal) vs 1/T')
-    plt.errorbar(x_values, filter1, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,3)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,1)) + ')$\\times 10^{-34}$')
-    # plt.errorbar(x_values, filter1, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label="(1/T) for filter: {:.3f}, h = {:.3f} $\pm$ {:.1f} ".format(lambda1, h_measured, h_measured_uncert))
+    # plt.plot(x_values, signal,'x', label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,3)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,1)) + ')$\\times 10^{-34}$')
+    plt.errorbar(x_values, signal, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', color=colors[i], label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,1)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,0)) + ')$\\times 10^{-34}$')
+    # plt.errorbar(x_values, signal, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label="(1/T) for filter: {:.3f}, h = {:.3f} $\pm$ {:.1f} ".format(lambda1, h_measured, h_measured_uncert))
 
-    plt.plot(x_values, linear(x_values,*optimal_params)) #, label='y = {:.2f}x + {:.2f}'.format(optimal_params[0], optimal_params[1]))
-    plt.xlabel('Lamp Current (A)')
+    plt.plot(x_values, f.linear_func(x_values,*optimal_params), color=colors[i]) #, label='y = {:.2f}x + {:.2f}'.format(optimal_params[0], optimal_params[1]))
+    plt.xlabel('Inverse Temperature (1/T) ($K^{-1}$)')
     plt.ylabel('ln(Signal)')
+    
 plt.grid()
-plt.legend()
+plt.legend(loc=1)
 plt.savefig('graphs\\planck_constant_from_voltage_filter_data.png')
 plt.show()
