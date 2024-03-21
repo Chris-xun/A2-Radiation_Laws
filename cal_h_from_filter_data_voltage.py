@@ -45,7 +45,7 @@ def reduce_by_first_nonzero(arr):
 
 
 # importing the data
-data = np.loadtxt('data\\gain_photodetector.csv', delimiter=',', skiprows=1)
+data = np.loadtxt('data\\filter_measure\\filter_1_mid_coil.csv', delimiter=',', skiprows=1)
 
 # Create a ScalarFormatter object
 formatter = ScalarFormatter(useMathText=True)  # useMathText=True to use math text for scientific notation
@@ -55,8 +55,8 @@ formatter.set_powerlimits((-1,1))  # You can adjust these limits based on your d
 # Apply the formatter to the y-axis
 plt.gca().xaxis.set_major_formatter(formatter)
 
-data_index = [2, 3, 4, 5, 6]
-uncert_index = [1, 1, 1, 1, 1]
+data_index = [1]
+uncert_index = [2]
 colors = ['red', 'blue', 'green', 'orange', 'purple']
 for i in range(len(data_index)):
     lambda1 = lambdas[i]
@@ -100,7 +100,7 @@ for i in range(len(data_index)):
     optimal_params, cov_matrix = opt.curve_fit(f.linear_func, x_values, signal, sigma=x_values_uncert)
     h_measured = -1 * k_b * optimal_params[0] * lambda1 / c
     h_measured_uncert = 1 * k_b * np.sqrt(cov_matrix[0,0]) * lambda1 / c
-    print('\nfor filter: ', lambda1,'h measured:', h_measured, 'fractional error:' , abs(h - h_measured) / h )
+    print('\nfor filter: ', lambda1,'h measured:', h_measured, 'fractional deviation:' , abs(h - h_measured) / h )
 
     # plotting the data
     plt.title('Planck constant from filter data\n Ln(Signal) vs 1/T')
