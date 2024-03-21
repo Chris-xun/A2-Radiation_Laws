@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize as opt
 from scipy.interpolate import CubicSpline
+import ast
 # import scienceplots
 # plt.style.use('science')
 
@@ -111,14 +112,26 @@ plt.plot(taken_data[:, 4], cal_temp_B_from_temp_R(measured_temp_R), 'x', color='
 plt.xlabel('Current [A]')
 plt.ylabel('Temperature [°K]')
 plt.title('Temperature - Current relation')
+
 # the values were determined later
-plt.plot([0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85], [1704.761995108607, 1816.6648674944515, 1915.7752515040233, 1997.35917421358, 2066.1052219558246, 2143.344283321691, 2204.6546532873253, 2262.103447937235, 2318.276476094833, 2413.0920857482847], 'x', label='fitting bb spectrum, center')
+arrays = []
+with open('coil_cs.txt', 'r') as file:
+    for line in file:
+        # Use ast.literal_eval to safely evaluate the line as a Python list
+        data_list = ast.literal_eval(line.strip())
+        # Convert the list to a numpy array and append to our list of arrays
+        arrays.append(np.array(data_list))
+x = arrays[0]
+y = arrays[1]
+plt.plot(x, y, 'x', label='fitting bb spectrum, center', color = 'orange') 
+cs = CubicSpline(x, y)
+plt.plot(x, cs(x), label='cubic spline fit, bb spectrum', color = 'orange')
+
 plt.grid()
 plt.legend()
 # plt.show()
 plt.savefig('graphs\\temp_current_relation.png')
 plt.close()
-
 
 
 #will was here
