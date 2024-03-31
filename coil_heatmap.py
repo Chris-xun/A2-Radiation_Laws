@@ -4,7 +4,7 @@ from scipy.interpolate import interp2d
 
 def interpolate_heatmap(data, x_dist, y_dist):
     # padding the data with zeros
-    data = np.pad(data, ((1, 1), (1, 1)), mode='constant')
+    data = np.pad(data, ((1, 1), (1, 1)), mode='constant' ,constant_values=1900)
     
     # Get dimensions of the input data
     n, m = data.shape
