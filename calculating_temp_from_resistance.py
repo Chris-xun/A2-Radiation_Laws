@@ -7,8 +7,9 @@ import matplotlib.pyplot as plt
 import scipy.optimize as opt
 from scipy.interpolate import CubicSpline
 import ast
-# import scienceplots
-# plt.style.use('science')
+import scienceplots
+plt.style.use(['science', 'notebook'])
+plt.rcParams['font.family'] = 'Times New Roman'
 
 # import data
 given_data = np.loadtxt('data\\temp_resistance_relation_lab_script.csv', delimiter=',', skiprows=1)
@@ -39,9 +40,9 @@ plt.ylabel('Temperature [°K]')
 plt.title('given Temperature - Resistance relation')
 plt.grid()
 plt.legend()
-# plt.show()
-plt.savefig('graphs\\temp_resistance_relation_lab_script.png')
-plt.close()
+plt.show()
+# plt.savefig('graphs\\temp_resistance_relation_lab_script.png')
+# plt.close()
 
 
 # function to calculate temperature from resistance (T_R)
@@ -76,8 +77,8 @@ plt.ylabel('Temperature [°K]')
 plt.title('Temperature - Resistance relation\n interpolated from standard values')
 plt.grid()
 plt.legend()
-# plt.show()
-plt.savefig('graphs\\temp_resistance_relation_interpolated.png')
+plt.show()
+# plt.savefig('graphs\\temp_resistance_relation_interpolated.png')
 plt.close()
 
 
@@ -90,10 +91,10 @@ plt.ylabel('T_B Temperature [°K]')
 optimal_params, covariance = opt.curve_fit(linear_func, T_correction_data[:, 0], T_correction_data[:, 1])
 plt.plot(T_correction_data[:, 0], linear_func(T_correction_data[:, 0], *optimal_params), label='linear fit')
 plt.legend()
-# plt.show()
+plt.show()
 plt.grid()
-plt.savefig('graphs\\T_R_to_T_B_correction.png')
-plt.close()
+# plt.savefig('graphs\\T_R_to_T_B_correction.png')
+# plt.close()
 print('m:', optimal_params[0], 'c:', optimal_params[1])
 '''m: 0.9558987321709527 c: 127.60388173355331'''
 
@@ -105,13 +106,17 @@ def cal_temp_B_from_temp_R(temp_R):
 
 # plotting temperatures against current  
 print(taken_data[:, 4])
+
+
 cs = CubicSpline(taken_data[:, 4], cal_temp_B_from_temp_R(measured_temp_R))
-plt.plot(taken_data[:, 4], cs(taken_data[:, 4]), label='cubic spline fit')
-plt.plot(taken_data[:, 4], measured_temp_R, 'x', color='blue', label='T_R')
-plt.plot(taken_data[:, 4], cal_temp_B_from_temp_R(measured_temp_R), 'x', color='red', label='T_B')
-plt.xlabel('Current [A]')
-plt.ylabel('Temperature [°K]')
-plt.title('Temperature - Current relation')
+plt.plot(taken_data[:, 4], cal_temp_B_from_temp_R(measured_temp_R), 'o', color='black', 
+         label= 'I - T$_{B}$ Relation for the Integrated Coil')
+plt.plot(taken_data[:, 4], cs(taken_data[:, 4]),  color='black', label='Cubic Spline Interpolation for the Integrated Coil')
+#plt.plot(taken_data[:, 4], measured_temp_R, 'x', color='blue', label='T_R')
+
+plt.xlabel('I [A]', fontsize = 20)
+plt.ylabel('T$_{B}$ [K]', fontsize = 20)
+plt.title('Brightness Temperature - Current Relation', fontsize = 25)
 
 # the values were determined later
 arrays = []
@@ -123,15 +128,18 @@ with open('coil_cs.txt', 'r') as file:
         arrays.append(np.array(data_list))
 x = arrays[0]
 y = arrays[1]
-plt.plot(x, y, 'x', label='fitting bb spectrum, center', color = 'orange') 
+
+plt.plot(x, y, 'o', label='I - T$_{B}$ Relation for Coil Mid Section', color = 'Red') 
 cs = CubicSpline(x, y)
-plt.plot(x, cs(x), label='cubic spline fit, bb spectrum', color = 'orange')
+plt.plot(x, cs(x), label='Cubic Spline Interpolation for Coil Mid Section', color = 'Red')
 
+
+
+plt.xticks(fontsize = 18)
+plt.yticks(fontsize = 18)
+plt.legend(fontsize = 20)
 plt.grid()
-plt.legend()
-# plt.show()
-plt.savefig('graphs\\temp_current_relation.png')
-plt.close()
-
-
+plt.show()
+# plt.savefig('graphs\\temp_current_relation.png')
+# plt.close()
 #will was here
