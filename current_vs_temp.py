@@ -61,11 +61,12 @@ for current, color in zip(current_numbers, colors):
     plt.plot(x, y, label=str(current)+'A', color=color, alpha = 0.5)
     plt.plot(x, fit_y, color=color)
 
+plt.title('Fitting the blackbody radiation curve to the coil data for temperature')
 plt.xlabel('Wavelength')
 plt.ylabel('Intensity')
 plt.ylim(0, 0.6e7)
 plt.legend()
-# plt.savefig('current_vs_temp.png')
+plt.savefig('Fitting the blackbody radiation curve to the coil data for temperature.png')
 plt.show()
 plt.close()
 
