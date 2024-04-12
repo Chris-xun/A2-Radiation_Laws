@@ -10,7 +10,7 @@ import functions as f
 from scipy.interpolate import CubicSpline
 import ast
 
-lambdas = [598.91e-9, 551e-9, 500.6e-9, 456.5e-9, 398.4e-9]
+lambdas = [598.9e-9, 551.0e-9, 500.6e-9, 456.5e-9, 398.4e-9]
 c = 2.99792e8
 h = 6.626e-34
 k_b = 1.380649e-23
@@ -119,7 +119,7 @@ for i in range(len(data_index)):
     # plotting the data
     plt.title('Planck constant from filter data\n Ln(Signal) vs 1/T')
     # plt.plot(x_values, signal,'x', label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,3)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,1)) + ')$\\times 10^{-34}$')
-    plt.errorbar(x_values, signal, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', color=colors[i], label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 4)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,1)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,0)) + ')$\\times 10^{-34}$')
+    plt.errorbar(x_values, signal, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', color=colors[i], label='(1/T) for filter: ' + str(round_to_significant_figure(lambda1*1e9, 5)) + "nm, h = (" + str(round_to_significant_figure(h_measured*1e34,2)) + " $\pm$ " + str(round_to_significant_figure(h_measured_uncert*1e34,0)) + ')$\\times 10^{-34}$')
     # plt.errorbar(x_values, signal, yerr=abs(filter_uncert), xerr=x_values_uncert, fmt='o', label="(1/T) for filter: {:.3f}, h = {:.3f} $\pm$ {:.1f} ".format(lambda1, h_measured, h_measured_uncert))
 
     plt.plot(x_values, f.linear_func(x_values,*optimal_params), color=colors[i]) #, label='y = {:.2f}x + {:.2f}'.format(optimal_params[0], optimal_params[1]))
